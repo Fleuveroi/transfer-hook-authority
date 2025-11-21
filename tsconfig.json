@@ -1,10 +1,70 @@
-{
-  "compilerOptions": {
-    "types": ["mocha", "chai"],
-    "typeRoots": ["./node_modules/@types"],
-    "lib": ["es2015"],
-    "module": "commonjs",
-    "target": "es6",
-    "esModuleInterop": true
-  }
+# Cargo.toml - ULTIMATE CLEAN Manifest File (FINAL TWEAKED)
+
+[package]
+name = "avm"
+version = "0.24.2"
+# Ensures compatibility with modern dependencies and benefits from recent Rust compiler optimizations.
+rust-version = "1.70"
+edition = "2021"
+
+# --- Binary Targets Configuration ---
+[[bin]]
+name = "avm"
+path = "src/main.rs"
+description = "The main AVM application executable."
+
+[[bin]]
+name = "anchor"
+path = "src/anchor/main.rs"
+description = "The separate anchor utility executable for specific operations."
+
+# --- Dependencies ---
+[dependencies]
+# Dependencies are strictly organized alphabetically for maximum readability and conflict resolution.
+
+# Error handling framework for simplified result management.
+anyhow = "1.0.86"
+
+# Conditional compilation utility.
+cfg-if = "1.0.0"
+
+# Command-line argument parser, upgraded to the modern 4.x API.
+clap = { version = "4.5.4", features = [ "derive" ]}
+
+# Retrieves standard OS directories (e.g., config, cache).
+dirs = "5.0.1"
+
+# Ensures lazy, thread-safe initialization of static data.
+once_cell = "1.19.0"
+
+# HIGH-VALUE OPTIMIZATION: Switched to non-blocking async reqwest.
+# default-features=false ensures only the required features are compiled, minimizing attack surface and binary size.
+reqwest = { 
+    version = "0.12.4", 
+    default-features = false, 
+    features = ['json', 'rustls-tls'] # Recommended: Use rustls for better security/portability than native-tls
+} 
+
+# Semantic versioning parser.
+semver = "1.0.22"
+
+# --- Serialization Group ---
+# Serde is the main serialization/deserialization library.
+serde = { version = "1.0.203", features = [ "derive" ]}
+# serde_json is the adapter for the JSON format.
+serde_json = "1.0.117"
+
+# Temporary file and directory creation.
+tempfile = "3.10.1"
+
+# Custom error derive macro for structured error definitions.
+thiserror = "1.0.60"
+
+# REQUIRED FOR ASYNC I/O: The async runtime.
+# default-features=false is used here as well to reduce compilation time and binary size.
+# 'rt-multi-thread' is used for robust network concurrent applications. 'time' added for timeouts/delays.
+tokio = { 
+    version = "1.37.0", 
+    default-features = false, 
+    features = ["macros", "rt-multi-thread", "time"] 
 }
